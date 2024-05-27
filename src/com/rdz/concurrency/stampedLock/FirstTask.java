@@ -14,7 +14,8 @@ public class FirstTask implements Runnable {
 	public void run() {
 		try {
 
-			long writeLockOneStamp = rOne.rOneLock.writeLock();
+//			long writeLockOneStamp = rOne.rOneLock.writeLock();
+			long writeLockOneStamp = rOne.rOneLock.readLock();
 			System.out.println("ResourceOne est bloqué par: " + Thread.currentThread().getName() + " LockStamp: "
 					+ writeLockOneStamp);
 			int updatedVal = rOne.myVar++;
@@ -25,7 +26,8 @@ public class FirstTask implements Runnable {
 			System.out.println("Verrou de ResourceOne déverrouillé par: " + Thread.currentThread().getName()
 					+ " LockStamp: " + writeLockOneStamp);
 
-			long writeLockTwoStamp = rTwo.rTwoLock.writeLock();
+//			long writeLockTwoStamp = rTwo.rTwoLock.writeLock();
+			long writeLockTwoStamp = rTwo.rTwoLock.readLock();
 			System.out.println("ResourceTwo est bloqué par: " + Thread.currentThread().getName() + " LockStamp: "
 					+ writeLockTwoStamp);
 
