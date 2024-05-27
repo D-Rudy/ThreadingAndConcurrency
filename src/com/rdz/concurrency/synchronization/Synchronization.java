@@ -13,8 +13,10 @@ public class Synchronization {
 		Thread threadTwo = new Thread(new CounterIncrementor(commonCounterTwo, NUM_ITERATIONS));
 		Thread threadThree = new Thread(new CounterIncrementor(commonCounterTwo, NUM_ITERATIONS));
 
-		System.out.println("Valeur de début du compteur 1: " + commonCounterOne.getMyNum());
-		System.out.println("Valeur de début du compteur 2: " + commonCounterTwo.getMyNum());
+		System.out.println("Valeur de début du compteur 1: \n    Valeur 1: " + commonCounterOne.getFirstNum()
+				+ "\n    Valeur 2: " + commonCounterOne.getSecondNum());
+		System.out.println("Valeur de début du compteur 2: \n    Valeur 1: " + commonCounterTwo.getFirstNum()
+				+ "\n    Valeur 2: " + commonCounterTwo.getSecondNum());
 		try {
 			threadOne.start();
 			threadTwo.start();
@@ -25,7 +27,10 @@ public class Synchronization {
 			e.printStackTrace();
 		}
 
-		System.out.println("Valeur final du compteur 1: " + commonCounterOne.getMyNum());
-		System.out.println("Valeur final du compteur 2: " + commonCounterTwo.getMyNum());
+		System.out.println("\n*****************************\n");
+		System.out.println("Valeur finale du compteur 1: \n    Valeur 1: " + commonCounterOne.getFirstNum()
+				+ "\n    Valeur 2: " + commonCounterOne.getSecondNum());
+		System.out.println("Valeur finale du compteur 2: \n    Valeur 1: " + commonCounterTwo.getFirstNum()
+				+ "\n    Valeur 2: " + commonCounterTwo.getSecondNum());
 	}
 }
