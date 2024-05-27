@@ -1,7 +1,5 @@
 package com.rdz.concurrency.stampedLock;
 
-import java.util.concurrent.TimeUnit;
-
 public class FirstTask implements Runnable {
 
 	ResourceOne rOne;
@@ -16,37 +14,27 @@ public class FirstTask implements Runnable {
 	public void run() {
 		try {
 
-//			boolean rOneLockAquired = rOne.rOneLock.tryLock();
-			boolean rOneLockAquired = rOne.rOneLock.tryLock(10, TimeUnit.SECONDS);
+			long writeLockOneStamp = rOne.rOneLock.writeLock();
+			System.out.println("ResourceOne est bloqué par: " + Thread.currentThread().getName() + " LockStamp: "
+					+ writeLockOneStamp);
+			int updatedVal = rOne.myVar++;
+			Thread.sleep(20000);
+			rOne.myVar = updatedVal;
 
-			if (rOneLockAquired) {
-				System.out.println("ResourceOne est bloqué par: " + Thread.currentThread().getName());
-				rOne.myVar++;
-				Thread.sleep(1000);
+			rOne.rOneLock.unlock(writeLockOneStamp);
+			System.out.println("Verrou de ResourceOne déverrouillé par: " + Thread.currentThread().getName()
+					+ " LockStamp: " + writeLockOneStamp);
 
-				rOneLockAquired = rOne.rOneLock.tryLock(10, TimeUnit.SECONDS);
+			long writeLockTwoStamp = rTwo.rTwoLock.writeLock();
+			System.out.println("ResourceTwo est bloqué par: " + Thread.currentThread().getName() + " LockStamp: "
+					+ writeLockTwoStamp);
 
-				if (rOneLockAquired) {
-					System.out.println("Second verrouillage de ResourceOne par: " + Thread.currentThread().getName());
-					rOne.myVar++;
-					Thread.sleep(1000);
+			Thread.sleep(20000);
+			rTwo.myVar--;
 
-					rOne.rOneLock.unlock();
-					System.out.println("Second déverrouillage de ResourceOne par: " + Thread.currentThread().getName());
-				}
-				rOne.rOneLock.unlock();
-				System.out.println("Verrou de ResourceOne déverrouillé par: " + Thread.currentThread().getName());
-			}
-
-//			boolean rTwoLockAquired = rTwo.rTwoLock.tryLock();
-			boolean rTwoLockAquired = rTwo.rTwoLock.tryLock(10, TimeUnit.SECONDS);
-			if (rTwoLockAquired) {
-				System.out.println("ResourceTwo est bloqué par: " + Thread.currentThread().getName());
-				rTwo.myVar--;
-				Thread.sleep(1000);
-				rTwo.rTwoLock.unlock();
-				System.out.println("Verrou de ResourceTwo déverrouillé par: " + Thread.currentThread().getName());
-			}
+			rTwo.rTwoLock.unlock(writeLockTwoStamp);
+			System.out.println("Verrou de ResourceTwo déverrouillé par: " + Thread.currentThread().getName()
+					+ " LockStamp: " + writeLockTwoStamp);
 
 		} catch (InterruptedException e) {
 			e.printStackTrace();
